@@ -469,8 +469,15 @@ function extractEmails(str) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const codes = [];
+  for (let i = 0; i < str.length; i += 1) {
+    let code = str.charCodeAt(i);
+    if (code >= 65 && code <= 90) code = ((code - 52) % 26) + 65;
+    else if (code >= 97 && code <= 122) code = ((code - 84) % 26) + 97;
+    codes.push(code);
+  }
+  return String.fromCharCode(...codes);
 }
 
 /**
@@ -497,8 +504,15 @@ function encodeToRot13(/* str */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const suits = { '♣': 0, '♦': 1, '♥': 2, '♠': 3 };
+  let rank = value.slice(0, -1);
+  rank = rank
+    .replace('A', '1')
+    .replace('J', '11')
+    .replace('Q', '12')
+    .replace('K', '13');
+  return Number(rank) - 1 + suits[value.slice(-1)] * 13;
 }
 
 module.exports = {
